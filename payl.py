@@ -148,7 +148,7 @@ def detect(models, header, packet, fresult):
 def get_byte_freq(payload, length):
     c = Counter()
     arr_payload = []
-    grams = dict.fromkeys(range(0, 255), 0)
+    grams = dict.fromkeys(range(0, 256), 0)
 
     for ch in list(payload):
         arr_payload.append(ord(ch))
