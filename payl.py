@@ -2,7 +2,7 @@
 
 import pcapy
 import os
-import sys
+import sys, traceback
 
 from collections import Counter
 from impacket import ImpactDecoder, ImpactPacket
@@ -20,6 +20,7 @@ def main(argv):
         else:
             payl_detect(argv[2])
     except IndexError as e:
+        traceback.print_exc(file=sys.stdout)
         print "Usage : python payl.py <training|testing> [online|filename]"
 
 def payl_train(infile):
@@ -41,13 +42,14 @@ def payl_detect(mode):
     models = {}
 
     for path in os.listdir(PaylModel.DIRNAME):
-        if os.path.isfile(PaylModel.DIRNAME + "/" + path):
-            path = path.split(".")[0]
-            port = path.split("-")[0]
-            length = path.split("-")[1]
+        if path.find(".payl") == (len(path) - 5):
+            if os.path.isfile(PaylModel.DIRNAME + "/" + path):
+                path = path.split(".")[0]
+                port = path.split("-")[0]
+                length = path.split("-")[1]
 
-            models[path] = PaylModel(port, length)
-            models[path].load()
+                models[path] = PaylModel(port, length)
+                models[path].load()
 
     if mode == "online":
         print "not supported yet"
